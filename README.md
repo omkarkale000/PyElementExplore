@@ -1,50 +1,84 @@
+# This is a Element details using pubchempy
+# we will be adding all the functions of pubchempy with UI inputs here
 
-## Dependencies
-The script requires the following dependencies:
+__________________
+#run the start.sh:
 
-* pandas
-* pubchempy
-* requests
-* argparse
-
-These dependencies can be installed using pip, as follows:
 ```
-pip install pandas pubchempy requests argparse
+sh start.sh
 ```
 
-## Usage
-To use the script, simply run it from the command line, passing the path to the CSV file containing the compound names. The CSV file must have a column named "compound_name" containing the names of the compounds to download.
+*** this has all the requirements and commands
+
+___________________________________________________________________________________________________________
+# Having issue with port already used Check which services are running on a specific port (e.g., port 5000)
+
 ```
-python pubchem_3d_downloader.py path/to/compounds.csv
+sudo lsof -i :5000
+```
+___________________
+# Kill the services 
+
+```
+kill -9 <service ID>
+```
+------------------------------------------------------------------------
+
+# Do register and login 
+	 Like if you find the code usefull
+	 Provide suggestion 
+ 
+------------------------------------------------------------------------------
+# Doing code commit 
+# Assuming you are in the root directory of your Git repository
+
+```
+git add .
+git commit -m "Your commit message here"
+git push
 ```
 
-## Functionality
-The script performs the following tasks:
+# having issue with virtual environment
+#Creating a new virtual environment (venv) following the provided steps will not conflict with the existing one.
+#The new virtual environment will be a separate and isolated environment with its own Python interpreter and installed packages.
 
-1. Load table data into Pandas DataFrame
-2. Loop through DataFrame and search PubChem for each compound
-3. Loop through DataFrame and download the 3D structure of each compound
-4. Save the SDF file for each compound in the same directory as the script
+Here are the steps:
+________________________________________________________________
+#Deactivate the current virtual environment (if it's activated):
 
+```
+deactivate
+```
+__________________________________________
+#Remove the existing virtual environment:
 
-## Documentation
-The script consists of the following functions:
+```
+rm -rf venv
+```
+___________________
+#Upgrade virtualenv:
+```
+pip install --upgrade virtualenv
+```
 
+__________________________________________________
+#Recreate and activate the new virtual environment:
+```
+virtualenv venv
+source venv/bin/activate
+```
+	On Windows, use `venv\Scripts\activate`
 
-None.
+_______________________
+#then run the start.sh:
 
-## Error Handling
-The script includes error handling to handle the following errors:
+```
+sh start.sh
+```
+*** this has all the requirements and commands 
 
-* If the CSV file is not found, the script prints an error message and returns.
-* If the compound is not found in PubChem, the script prints an error message and continues to the next compound.
-* If the download of the SDF file fails, the script prints an error message and continues to the next compound.
-* If there is an error saving the SDF file, the script prints an error message and continues to the next compound.
+# Having issue with port already used Check which services are running on a specific port (e.g., port 5000)
 
-### Future Improvements
-Some possible future improvements for this script include:
+sudo lsof -i :5000
 
-* Adding support for downloading the 2D structure of compounds in various file formats.
-* Adding support for downloading other types of data from PubChem, such as properties, spectra, and bioactivity data.
-* Adding support for downloading compounds in bulk, rather than one at a time.
-
+--------------------------------------------------------------------------
