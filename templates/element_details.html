@@ -1,0 +1,48 @@
+<!-- templates/element_details.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PubChem Compound Viewer</title>
+
+    <style>
+        .sdf-data {
+            display: none;
+        }
+    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <button class="main-menu-button" onclick="location.href='{{ url_for('main_menu') }}'">Main Menu</button>
+    <h2>Get Elements Details</h2>
+    <!-- Add your content for element details here -->
+    <form method="post">
+        <label for="compound_name">Enter Compound Name:</label>
+        <input type="text" id="compound_name" name="compound_name" required>
+        <button type="submit">View</button>
+    </form>
+
+    {% if result %}
+        {% if result.error %}
+            <p>{{ result.error }}</p>
+        {% else %}
+            <h2>{{ result.compound_name }}</h2>
+            <img src="data:image/png;base64,{{ result.image }}" alt="Compound Image">
+
+            <button onclick="toggleSDF()">Show SDF Data</button>
+            <div id="sdfData" class="sdf-data">
+                <h3>SDF Data</h3>
+                <pre>{{ result.sdf }}</pre>
+            </div>
+        {% endif %}
+    {% endif %}
+
+    <script>
+        function toggleSDF() {
+            var sdfData = document.getElementById("sdfData");
+            sdfData.style.display = (sdfData.style.display === "none") ? "block" : "none";
+        }
+    </script>
+</body>
+</html>

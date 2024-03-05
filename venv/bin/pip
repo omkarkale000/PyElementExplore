@@ -1,4 +1,4 @@
-#!/workspaces/Element_mixer/Element_mixer/venv/bin/python3
+#!/workspaces/Element_mixer/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
