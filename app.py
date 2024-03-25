@@ -122,9 +122,59 @@ def molecular_structure():
         return render_template('molecular_structure.html', result=result)
     return render_template('molecular_structure.html', result=None)
 
-@app.route('/element_details')
+def get_compound_details(compound_name):
+    try:
+        # Search for the compound using PubChem
+        compounds = pcp.get_compounds(compound_name, 'name')
+
+        # Get details of the first compound (assuming there's only one result)
+        compound = compounds[0]
+
+        # Generate 2D structure
+        two_d_structure = generate_2d_structure(compound)
+
+        # Extract relevant details
+        details = {
+            "compound_name": compound_name,
+            "PubChem CID": compound.cid,
+            "Molecular Formula": compound.molecular_formula,
+            "Molecular Weight": compound.molecular_weight,
+            "Synonyms": compound.synonyms[:5],
+            "2D Structure": two_d_structure
+        }
+
+        return details
+    except Exception as e:
+        print(f"Error getting details for compound {compound_name}: {e}")
+        return None
+
+def generate_2d_structure(compound):
+    try:
+        mol = Chem.MolFromSmiles(compound.isomeric_smiles)
+        img = Draw.MolToImage(mol)
+        buffered = BytesIO()
+        img.save(buffered, format="PNG")
+        return base64.b64encode(buffered.getvalue()).decode('utf-8')
+    except Exception as e:
+        print(f"Error generating 2D structure: {e}")
+        return None
+
+@app.route('/element_details', methods=['GET', 'POST'])
 def element_details():
-    return render_template('element_details.html')
+    if request.method == 'POST':
+        compound_name = request.form['compound_name']
+
+        if not compound_name:
+            return render_template('element_details.html', result={"error": "Please enter a compound name."})
+
+        compound_details = get_compound_details(compound_name)
+
+        if compound_details:
+            return render_template('element_details.html', result=compound_details)
+        else:
+            return render_template('element_details.html', result={"error": f"Unable to retrieve details for compound {compound_name}."})
+
+    return render_template('element_details.html', result=None)
 
 if __name__ == '__main__':
     app.run(debug=True)

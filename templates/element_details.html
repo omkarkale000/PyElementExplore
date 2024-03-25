@@ -4,45 +4,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PubChem Compound Viewer</title>
-
+    <title>Compound Details</title>
     <style>
+
+body {
+        background-image: url('{{ url_for('static', filename='Background.jpg') }}');
+        background-size: cover; /* Cover the entire screen */
+        background-position: center;
+        background-repeat: no-repeat;
+        text-shadow: 2px 2px 4px black;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        width: 100vw; /* Set width to 100% of viewport width */
+        height: 100vh; /* Set height to 100% of viewport height */
+    }
+
+    .container {
+        text-align: left; /* Align content to the left */
+        margin: 0 auto; /* Center the content horizontally */
+        max-width: 800px; /* Limit the maximum width of the container */
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.1);
+        color: white;
+    }
+
+
+        .main-menu-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            text-decoration: none;
+            background-color: #fff;
+            color: #000;
+            border-radius: 5px;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center; /* Center the heading */
+        }
+
+        h2, h3 {
+            margin-bottom: 20px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
         .sdf-data {
             display: none;
+            max-height: 50vh; /* Set maximum height for the SDF data */
+            overflow-y: auto; /* Add scroll bar for overflow */
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.1); /* Add background color with transparency */
+            border-radius: 10px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            width: 50%;
+            box-sizing: border-box; /* Ensure padding and border are included in the width */
+        }
+
+        button[type="submit"] {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
         }
     </style>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <button class="main-menu-button" onclick="location.href='{{ url_for('main_menu') }}'">Main Menu</button>
-    <h2>Get Elements Details</h2>
-    <!-- Add your content for element details here -->
-    <form method="post">
-        <label for="compound_name">Enter Compound Name:</label>
-        <input type="text" id="compound_name" name="compound_name" required>
-        <button type="submit">View</button>
-    </form>
+    <div class="container">
+        <h1>Compound Details</h1>
 
-    {% if result %}
-        {% if result.error %}
-            <p>{{ result.error }}</p>
-        {% else %}
-            <h2>{{ result.compound_name }}</h2>
-            <img src="data:image/png;base64,{{ result.image }}" alt="Compound Image">
+        <form method="post">
+            <label for="compound_name">Enter Compound Name:</label>
+            <input type="text" id="compound_name" name="compound_name" required>
+            <button type="submit">Get Details</button>
+        </form>
 
-            <button onclick="toggleSDF()">Show SDF Data</button>
-            <div id="sdfData" class="sdf-data">
-                <h3>SDF Data</h3>
-                <pre>{{ result.sdf }}</pre>
-            </div>
+        {% if result %}
+            {% if result.error %}
+                <p>{{ result.error }}</p>
+            {% else %}
+                <h2>Compound Details for {{ result.compound_name }}</h2>
+                <ul>
+                    <li><strong>PubChem CID:</strong> {{ result["PubChem CID"] }}</li>
+                    <li><strong>Molecular Formula:</strong> {{ result["Molecular Formula"] }}</li>
+                    <li><strong>Molecular Weight:</strong> {{ result["Molecular Weight"] }}</li>
+                    <li><strong>Synonyms:</strong>
+                        <ul>
+                            {% for synonym in result["Synonyms"] %}
+                                <li>{{ synonym }}</li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                </ul>
+                <h2>2D Structure:</h2>
+                {% if result["2D Structure"] %}
+                    <img src="data:image/png;base64,{{ result['2D Structure'] }}" alt="2D Structure">
+                {% else %}
+                    <p>No 2D structure available.</p>
+                {% endif %}
+            {% endif %}
         {% endif %}
-    {% endif %}
-
-    <script>
-        function toggleSDF() {
-            var sdfData = document.getElementById("sdfData");
-            sdfData.style.display = (sdfData.style.display === "none") ? "block" : "none";
-        }
-    </script>
+    </div>
 </body>
 </html>
